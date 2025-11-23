@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Tools Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #333;
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            color: #667eea;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .tool-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .tool-title {
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .tool-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .tool-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            color: #666;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .category-section {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            color: white;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 5px solid white;
+        }
+
+        footer {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        footer p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-link {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            line-height: 40px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛠️ Utility Tools Collection</h1>
+            <p class="tagline">Your all-in-one toolkit for productivity and creativity</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Tools Available</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Free to Use</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Sign-up Required</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Health & Wellness Category -->
+        <div class="category-section">
+            <h2 class="category-title">💪 Health & Wellness</h2>
+            <div class="tools-grid">
+                <a href="sleep-calculator.html" class="tool-card">
+                    <div class="tool-icon">💤</div>
+                    <div class="tool-title">Sleep Time Calculator</div>
+                    <div class="tool-description">
+                        Calculate optimal sleep and wake times based on sleep cycles. Wake up refreshed and energized by timing your sleep cycles perfectly.
+                    </div>
+                    <div class="tool-tags">
+                        <span class="tag">Health</span>
+                        <span class="tag">Sleep</span>
+                        <span class="tag">Calculator</span>
+                    </div>
+                </a>
+
+                <a href="calorie-calculator.html" class="tool-card">
+                    <div class="tool-icon">🔥</div>
+                    <div class="tool-title">Calorie Calculator</div>
+                    <div class="tool-description">
+                        Calculate your daily calorie needs with BMR and TDEE. Get personalized calorie goals for weight loss, maintenance, or gain with macro breakdown.
+                    </div>
+                    <div class="tool-tags">
+                        <span class="tag">Health</span>
+                        <span class="tag">Fitness</span>
+                        <span class="tag">Nutrition</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Education Category -->
+        <div class="category-section">
+            <h2 class="category-title">📚 Education</h2>
+            <div class="tools-grid">
+                <a href="grade-calculator.html" class="tool-card">
+                    <div class="tool-icon">📝</div>
+                    <div class="tool-title">Grade Calculator</div>
+                    <div class="tool-description">
+                        Calculate grade percentages and letter grades. Supports simple grading and weighted grade calculations with GPA conversion.
+                    </div>
+                    <div class="tool-tags">
+                        <span class="tag">Education</span>
+                        <span class="tag">Grades</span>
+                        <span class="tag">Calculator</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Writing & Content Category -->
+        <div class="category-section">
+            <h2 class="category-title">✍️ Writing & Content</h2>
+            <div class="tools-grid">
+                <a href="ai-detector.html" class="tool-card">
+                    <div class="tool-icon">🤖</div>
+                    <div class="tool-title">AI Text Detector</div>
+                    <div class="tool-description">
+                        Analyze text to determine if it's written by humans or AI. Uses advanced heuristics to detect AI-generated content patterns.
+                    </div>
+                    <div class="tool-tags">
+                        <span class="tag">AI</span>
+                        <span class="tag">Detection</span>
+                        <span class="tag">Writing</span>
+                    </div>
+                </a>
+
+                <a href="plagiarism-checker.html" class="tool-card">
+                    <div class="tool-icon">🔍</div>
+                    <div class="tool-title">Plagiarism Checker</div>
+                    <div class="tool-description">
+                        Check text for plagiarism and similarity. Compare documents or detect self-plagiarism and repetitive content within your writing.
+                    </div>
+                    <div class="tool-tags">
+                        <span class="tag">Writing</span>
+                        <span class="tag">Plagiarism</span>
+                        <span class="tag">Academic</span>
+                    </div>
+                </a>
+
+                <a href="auto-writer.html" class="tool-card">
+                    <div class="tool-icon">✨</div>
+                    <div class="tool-title">Auto Writer</div>
+                    <div class="tool-description">
+                        Generate content with smart templates. Create emails, essays, social media posts, blog outlines, product descriptions, and story outlines.
+                    </div>
+                    <div class="tool-tags">
+                        <span class="tag">Writing</span>
+                        <span class="tag">Content</span>
+                        <span class="tag">Templates</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p>All tools are completely free and work entirely in your browser. No data is stored or transmitted.</p>
+            <p style="color: #999; font-size: 12px; margin-top: 10px;">
+                © 2024 Utility Tools Collection. All rights reserved.
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

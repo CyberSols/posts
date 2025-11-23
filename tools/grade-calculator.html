@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Percentage Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #f093fb;
+        }
+
+        button.calculate {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button.calculate:hover {
+            transform: translateY(-2px);
+        }
+
+        .assignment-list {
+            margin-bottom: 20px;
+        }
+
+        .assignment-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .assignment-item input {
+            flex: 1;
+        }
+
+        .assignment-item button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .add-assignment {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 30px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-card h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .result-card .percentage {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .result-card .grade {
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        .grade-scale {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .grade-scale h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .grade-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin-bottom: 5px;
+            background: white;
+            border-radius: 6px;
+        }
+
+        .grade-item.highlight {
+            border: 2px solid #f093fb;
+            background: #fff0f6;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .info-box p {
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Grade Calculator</h1>
+        <p class="subtitle">Calculate your grade percentage and letter grade</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('simple')">Simple Calculator</button>
+            <button class="tab" onclick="switchTab('weighted')">Weighted Grade</button>
+        </div>
+
+        <!-- Simple Calculator -->
+        <div id="simple-tab" class="tab-content active">
+            <div class="input-group">
+                <label for="points-earned">Points Earned:</label>
+                <input type="number" id="points-earned" placeholder="Enter points you earned" min="0" step="0.01">
+            </div>
+
+            <div class="input-group">
+                <label for="total-points">Total Points Possible:</label>
+                <input type="number" id="total-points" placeholder="Enter total points possible" min="0" step="0.01">
+            </div>
+
+            <button class="calculate" onclick="calculateSimpleGrade()">Calculate Grade</button>
+        </div>
+
+        <!-- Weighted Calculator -->
+        <div id="weighted-tab" class="tab-content">
+            <div class="assignment-list" id="assignment-list">
+                <div class="assignment-item">
+                    <input type="text" placeholder="Assignment name" class="assign-name">
+                    <input type="number" placeholder="Score" min="0" max="100" step="0.01" class="assign-score">
+                    <input type="number" placeholder="Weight %" min="0" max="100" step="1" class="assign-weight">
+                </div>
+            </div>
+
+            <button class="add-assignment" onclick="addAssignment()">+ Add Assignment</button>
+            <button class="calculate" onclick="calculateWeightedGrade()">Calculate Weighted Grade</button>
+        </div>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-box">
+            <p><strong>💡 Grading Scale:</strong> A: 90-100% | B: 80-89% | C: 70-79% | D: 60-69% | F: Below 60%</p>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+
+            if (tab === 'simple') {
+                tabs[0].classList.add('active');
+                document.getElementById('simple-tab').classList.add('active');
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('weighted-tab').classList.add('active');
+            }
+
+            document.getElementById('results').classList.remove('show');
+        }
+
+        function getLetterGrade(percentage) {
+            if (percentage >= 97) return 'A+';
+            if (percentage >= 93) return 'A';
+            if (percentage >= 90) return 'A-';
+            if (percentage >= 87) return 'B+';
+            if (percentage >= 83) return 'B';
+            if (percentage >= 80) return 'B-';
+            if (percentage >= 77) return 'C+';
+            if (percentage >= 73) return 'C';
+            if (percentage >= 70) return 'C-';
+            if (percentage >= 67) return 'D+';
+            if (percentage >= 63) return 'D';
+            if (percentage >= 60) return 'D-';
+            return 'F';
+        }
+
+        function getGPA(percentage) {
+            if (percentage >= 97) return '4.0';
+            if (percentage >= 93) return '4.0';
+            if (percentage >= 90) return '3.7';
+            if (percentage >= 87) return '3.3';
+            if (percentage >= 83) return '3.0';
+            if (percentage >= 80) return '2.7';
+            if (percentage >= 77) return '2.3';
+            if (percentage >= 73) return '2.0';
+            if (percentage >= 70) return '1.7';
+            if (percentage >= 67) return '1.3';
+            if (percentage >= 63) return '1.0';
+            if (percentage >= 60) return '0.7';
+            return '0.0';
+        }
+
+        function displayResults(percentage) {
+            const letter = getLetterGrade(percentage);
+            const gpa = getGPA(percentage);
+
+            let html = `
+                <div class="result-card">
+                    <h2>Your Grade</h2>
+                    <div class="percentage">${percentage.toFixed(2)}%</div>
+                    <div class="grade">Letter Grade: ${letter}</div>
+                    <div style="font-size: 20px; margin-top: 10px;">GPA: ${gpa}</div>
+                </div>
+
+                <div class="grade-scale">
+                    <h3>Grade Scale</h3>
+                    ${generateGradeScale(percentage)}
+                </div>
+            `;
+
+            document.getElementById('results').innerHTML = html;
+            document.getElementById('results').classList.add('show');
+        }
+
+        function generateGradeScale(currentPercentage) {
+            const grades = [
+                { letter: 'A+', range: '97-100%', min: 97 },
+                { letter: 'A', range: '93-96%', min: 93 },
+                { letter: 'A-', range: '90-92%', min: 90 },
+                { letter: 'B+', range: '87-89%', min: 87 },
+                { letter: 'B', range: '83-86%', min: 83 },
+                { letter: 'B-', range: '80-82%', min: 80 },
+                { letter: 'C+', range: '77-79%', min: 77 },
+                { letter: 'C', range: '73-76%', min: 73 },
+                { letter: 'C-', range: '70-72%', min: 70 },
+                { letter: 'D+', range: '67-69%', min: 67 },
+                { letter: 'D', range: '63-66%', min: 63 },
+                { letter: 'D-', range: '60-62%', min: 60 },
+                { letter: 'F', range: 'Below 60%', min: 0 }
+            ];
+
+            let html = '';
+            grades.forEach(grade => {
+                const isHighlight = currentPercentage >= grade.min &&
+                    (grade.letter === 'F' || currentPercentage < (grades[grades.indexOf(grade) - 1]?.min || 101));
+
+                html += `
+                    <div class="grade-item ${isHighlight ? 'highlight' : ''}">
+                        <span><strong>${grade.letter}</strong></span>
+                        <span>${grade.range}</span>
+                    </div>
+                `;
+            });
+
+            return html;
+        }
+
+        function calculateSimpleGrade() {
+            const earned = parseFloat(document.getElementById('points-earned').value);
+            const total = parseFloat(document.getElementById('total-points').value);
+
+            if (!earned || !total || total === 0) {
+                alert('Please enter valid values');
+                return;
+            }
+
+            if (earned > total) {
+                alert('Points earned cannot be greater than total points');
+                return;
+            }
+
+            const percentage = (earned / total) * 100;
+            displayResults(percentage);
+        }
+
+        function addAssignment() {
+            const list = document.getElementById('assignment-list');
+            const item = document.createElement('div');
+            item.className = 'assignment-item';
+            item.innerHTML = `
+                <input type="text" placeholder="Assignment name" class="assign-name">
+                <input type="number" placeholder="Score" min="0" max="100" step="0.01" class="assign-score">
+                <input type="number" placeholder="Weight %" min="0" max="100" step="1" class="assign-weight">
+                <button onclick="this.parentElement.remove()">Remove</button>
+            `;
+            list.appendChild(item);
+        }
+
+        function calculateWeightedGrade() {
+            const items = document.querySelectorAll('.assignment-item');
+            let totalWeightedScore = 0;
+            let totalWeight = 0;
+
+            items.forEach(item => {
+                const score = parseFloat(item.querySelector('.assign-score').value);
+                const weight = parseFloat(item.querySelector('.assign-weight').value);
+
+                if (!isNaN(score) && !isNaN(weight)) {
+                    totalWeightedScore += (score * weight);
+                    totalWeight += weight;
+                }
+            });
+
+            if (totalWeight === 0) {
+                alert('Please enter at least one assignment with score and weight');
+                return;
+            }
+
+            if (totalWeight !== 100) {
+                alert(`Warning: Your weights add up to ${totalWeight}%, not 100%. Results will be calculated proportionally.`);
+            }
+
+            const percentage = totalWeightedScore / totalWeight;
+            displayResults(percentage);
+        }
+    </script>
+</body>
+</html>

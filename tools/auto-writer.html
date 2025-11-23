@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Writer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .template-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            text-align: center;
+        }
+
+        .template-card:hover {
+            border-color: #6a11cb;
+            transform: translateY(-3px);
+        }
+
+        .template-card.selected {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-color: #6a11cb;
+        }
+
+        .template-card .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .template-card .name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .input-section {
+            display: none;
+        }
+
+        .input-section.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #6a11cb;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .options-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button.generate {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button.generate:hover {
+            transform: translateY(-2px);
+        }
+
+        .output-section {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .output-section.show {
+            display: block;
+        }
+
+        .output-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #6a11cb;
+            margin-bottom: 20px;
+        }
+
+        .output-box h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .generated-text {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.8;
+            color: #333;
+            white-space: pre-wrap;
+            font-size: 16px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .copy-btn {
+            background: #4caf50;
+            color: white;
+        }
+
+        .copy-btn:hover {
+            background: #45a049;
+        }
+
+        .regenerate-btn {
+            background: #2196f3;
+            color: white;
+        }
+
+        .regenerate-btn:hover {
+            background: #1976d2;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-item .label {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .stat-item .value {
+            color: #1976d2;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .info-box {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .info-box p {
+            color: #e65100;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✍️ Auto Writer</h1>
+        <p class="subtitle">Generate content with AI-powered templates</p>
+
+        <div class="template-grid">
+            <div class="template-card" onclick="selectTemplate('email')">
+                <div class="icon">📧</div>
+                <div class="name">Email</div>
+            </div>
+            <div class="template-card" onclick="selectTemplate('essay')">
+                <div class="icon">📝</div>
+                <div class="name">Essay</div>
+            </div>
+            <div class="template-card" onclick="selectTemplate('social')">
+                <div class="icon">📱</div>
+                <div class="name">Social Media</div>
+            </div>
+            <div class="template-card" onclick="selectTemplate('blog')">
+                <div class="icon">📰</div>
+                <div class="name">Blog Post</div>
+            </div>
+            <div class="template-card" onclick="selectTemplate('product')">
+                <div class="icon">🛍️</div>
+                <div class="name">Product Description</div>
+            </div>
+            <div class="template-card" onclick="selectTemplate('story')">
+                <div class="icon">📖</div>
+                <div class="name">Story</div>
+            </div>
+        </div>
+
+        <!-- Email Template -->
+        <div id="email-inputs" class="input-section">
+            <div class="input-group">
+                <label>Email Type:</label>
+                <select id="email-type">
+                    <option value="professional">Professional</option>
+                    <option value="casual">Casual</option>
+                    <option value="formal">Formal</option>
+                    <option value="thank-you">Thank You</option>
+                    <option value="apology">Apology</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Subject/Purpose:</label>
+                <input type="text" id="email-subject" placeholder="e.g., Meeting request, Follow-up, Introduction">
+            </div>
+            <div class="input-group">
+                <label>Key Points (one per line):</label>
+                <textarea id="email-points" placeholder="List the main points you want to include..."></textarea>
+            </div>
+            <button class="generate" onclick="generateEmail()">Generate Email</button>
+        </div>
+
+        <!-- Essay Template -->
+        <div id="essay-inputs" class="input-section">
+            <div class="input-group">
+                <label>Essay Topic:</label>
+                <input type="text" id="essay-topic" placeholder="Enter your essay topic">
+            </div>
+            <div class="input-group">
+                <label>Essay Type:</label>
+                <select id="essay-type">
+                    <option value="argumentative">Argumentative</option>
+                    <option value="persuasive">Persuasive</option>
+                    <option value="expository">Expository</option>
+                    <option value="descriptive">Descriptive</option>
+                    <option value="narrative">Narrative</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Main Arguments/Points:</label>
+                <textarea id="essay-points" placeholder="List your main arguments or points..."></textarea>
+            </div>
+            <button class="generate" onclick="generateEssay()">Generate Essay Outline</button>
+        </div>
+
+        <!-- Social Media Template -->
+        <div id="social-inputs" class="input-section">
+            <div class="input-group">
+                <label>Platform:</label>
+                <select id="social-platform">
+                    <option value="twitter">Twitter/X</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="tiktok">TikTok</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Topic/Message:</label>
+                <input type="text" id="social-topic" placeholder="What do you want to post about?">
+            </div>
+            <div class="input-group">
+                <label>Tone:</label>
+                <select id="social-tone">
+                    <option value="casual">Casual</option>
+                    <option value="professional">Professional</option>
+                    <option value="funny">Funny</option>
+                    <option value="inspirational">Inspirational</option>
+                    <option value="promotional">Promotional</option>
+                </select>
+            </div>
+            <button class="generate" onclick="generateSocial()">Generate Post</button>
+        </div>
+
+        <!-- Blog Template -->
+        <div id="blog-inputs" class="input-section">
+            <div class="input-group">
+                <label>Blog Title:</label>
+                <input type="text" id="blog-title" placeholder="Enter your blog post title">
+            </div>
+            <div class="input-group">
+                <label>Target Audience:</label>
+                <input type="text" id="blog-audience" placeholder="e.g., Beginners, Professionals, Students">
+            </div>
+            <div class="input-group">
+                <label>Key Points to Cover:</label>
+                <textarea id="blog-points" placeholder="List the main sections or points..."></textarea>
+            </div>
+            <button class="generate" onclick="generateBlog()">Generate Blog Outline</button>
+        </div>
+
+        <!-- Product Description Template -->
+        <div id="product-inputs" class="input-section">
+            <div class="input-group">
+                <label>Product Name:</label>
+                <input type="text" id="product-name" placeholder="Enter product name">
+            </div>
+            <div class="input-group">
+                <label>Product Category:</label>
+                <input type="text" id="product-category" placeholder="e.g., Electronics, Fashion, Food">
+            </div>
+            <div class="input-group">
+                <label>Key Features:</label>
+                <textarea id="product-features" placeholder="List the main features..."></textarea>
+            </div>
+            <div class="input-group">
+                <label>Target Customer:</label>
+                <input type="text" id="product-customer" placeholder="Who is this product for?">
+            </div>
+            <button class="generate" onclick="generateProduct()">Generate Description</button>
+        </div>
+
+        <!-- Story Template -->
+        <div id="story-inputs" class="input-section">
+            <div class="input-group">
+                <label>Story Genre:</label>
+                <select id="story-genre">
+                    <option value="adventure">Adventure</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="scifi">Science Fiction</option>
+                    <option value="fantasy">Fantasy</option>
+                    <option value="romance">Romance</option>
+                    <option value="horror">Horror</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Main Character:</label>
+                <input type="text" id="story-character" placeholder="Describe your main character">
+            </div>
+            <div class="input-group">
+                <label>Setting:</label>
+                <input type="text" id="story-setting" placeholder="Where and when does it take place?">
+            </div>
+            <div class="input-group">
+                <label>Plot Idea:</label>
+                <textarea id="story-plot" placeholder="Brief plot idea or key events..."></textarea>
+            </div>
+            <button class="generate" onclick="generateStory()">Generate Story Outline</button>
+        </div>
+
+        <div id="output" class="output-section"></div>
+
+        <div class="info-box">
+            <p><strong>💡 Tip:</strong> This is a template-based content generator. Generated content is created using predefined structures and your inputs. Always review and personalize the output before using it.</p>
+        </div>
+    </div>
+
+    <script>
+        let currentTemplate = null;
+
+        function selectTemplate(template) {
+            currentTemplate = template;
+
+            // Remove all active classes
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelectorAll('.input-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Add active class to selected template
+            event.target.closest('.template-card').classList.add('selected');
+            document.getElementById(template + '-inputs').classList.add('active');
+
+            // Hide output
+            document.getElementById('output').classList.remove('show');
+        }
+
+        function displayOutput(text, type) {
+            const words = text.split(/\s+/).length;
+            const chars = text.length;
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+
+            const html = `
+                <div class="output-box">
+                    <h3>✨ Generated ${type}</h3>
+                    <div class="generated-text">${text}</div>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="label">Words</div>
+                            <div class="value">${words}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="label">Characters</div>
+                            <div class="value">${chars}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="label">Sentences</div>
+                            <div class="value">${sentences}</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="copy-btn" onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+                        <button class="regenerate-btn" onclick="regenerateContent()">🔄 Generate Again</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('output').innerHTML = html;
+            document.getElementById('output').classList.add('show');
+        }
+
+        function generateEmail() {
+            const type = document.getElementById('email-type').value;
+            const subject = document.getElementById('email-subject').value;
+            const points = document.getElementById('email-points').value;
+
+            if (!subject) {
+                alert('Please enter a subject/purpose');
+                return;
+            }
+
+            const greetings = {
+                professional: 'Dear [Recipient],',
+                casual: 'Hi [Name],',
+                formal: 'Dear [Title] [Last Name],',
+                'thank-you': 'Dear [Name],',
+                apology: 'Dear [Name],'
+            };
+
+            const openings = {
+                professional: `I hope this email finds you well. I am writing to ${subject}.`,
+                casual: `Hope you're doing well! I wanted to reach out about ${subject}.`,
+                formal: `I am writing to formally address ${subject}.`,
+                'thank-you': `I wanted to take a moment to thank you for ${subject}.`,
+                apology: `I am writing to sincerely apologize for ${subject}.`
+            };
+
+            const closings = {
+                professional: 'Best regards,\n[Your Name]',
+                casual: 'Thanks,\n[Your Name]',
+                formal: 'Sincerely,\n[Your Full Name]\n[Your Title]',
+                'thank-you': 'With gratitude,\n[Your Name]',
+                apology: 'Sincerely,\n[Your Name]'
+            };
+
+            let body = points ? '\n\n' + points.split('\n').map(p => '• ' + p.trim()).join('\n') : '';
+
+            const email = `${greetings[type]}\n\n${openings[type]}${body}\n\nI look forward to your response.\n\n${closings[type]}`;
+
+            displayOutput(email, 'Email');
+        }
+
+        function generateEssay() {
+            const topic = document.getElementById('essay-topic').value;
+            const type = document.getElementById('essay-type').value;
+            const points = document.getElementById('essay-points').value.split('\n').filter(p => p.trim());
+
+            if (!topic) {
+                alert('Please enter an essay topic');
+                return;
+            }
+
+            const introductions = {
+                argumentative: `This essay argues that ${topic}. Through careful analysis and evidence, I will demonstrate why this position is valid.`,
+                persuasive: `${topic} is a critical issue that deserves our attention. This essay will convince you why action is necessary.`,
+                expository: `This essay explores ${topic}, providing a comprehensive examination of the subject.`,
+                descriptive: `This essay provides a detailed description of ${topic}, painting a vivid picture for the reader.`,
+                narrative: `This is a story about ${topic}, sharing experiences and insights along the way.`
+            };
+
+            let outline = `ESSAY OUTLINE: ${topic}\n\n`;
+            outline += `I. Introduction\n`;
+            outline += `   ${introductions[type]}\n\n`;
+            outline += `II. Body Paragraphs\n`;
+
+            if (points.length > 0) {
+                points.forEach((point, index) => {
+                    outline += `   ${index + 1}. ${point}\n`;
+                    outline += `      - Topic sentence\n`;
+                    outline += `      - Supporting evidence\n`;
+                    outline += `      - Analysis and explanation\n\n`;
+                });
+            } else {
+                outline += `   1. Main Point 1\n`;
+                outline += `   2. Main Point 2\n`;
+                outline += `   3. Main Point 3\n\n`;
+            }
+
+            outline += `III. Conclusion\n`;
+            outline += `   - Restate thesis\n`;
+            outline += `   - Summarize key points\n`;
+            outline += `   - Final thoughts and implications`;
+
+            displayOutput(outline, 'Essay Outline');
+        }
+
+        function generateSocial() {
+            const platform = document.getElementById('social-platform').value;
+            const topic = document.getElementById('social-topic').value;
+            const tone = document.getElementById('social-tone').value;
+
+            if (!topic) {
+                alert('Please enter a topic');
+                return;
+            }
+
+            const emojis = {
+                casual: ['😊', '💯', '✨', '🔥'],
+                professional: ['💼', '📊', '🎯', '💡'],
+                funny: ['😂', '🤣', '😅', '🎉'],
+                inspirational: ['💪', '🌟', '🚀', '✨'],
+                promotional: ['🎁', '🛍️', '💰', '⭐']
+            };
+
+            const hashtags = {
+                twitter: `#${topic.replace(/\s+/g, '')} #TrendingNow`,
+                instagram: `#${topic.replace(/\s+/g, '')} #InstaDaily #FollowForMore`,
+                facebook: '',
+                linkedin: `#${topic.replace(/\s+/g, '')} #Professional #Industry`,
+                tiktok: `#${topic.replace(/\s+/g, '')} #FYP #Viral`
+            };
+
+            const maxLengths = {
+                twitter: 280,
+                instagram: 2200,
+                facebook: 500,
+                linkedin: 300,
+                tiktok: 150
+            };
+
+            let post = '';
+            const randomEmoji = emojis[tone][Math.floor(Math.random() * emojis[tone].length)];
+
+            if (tone === 'professional') {
+                post = `${topic}\n\nKey insights:\n• [Point 1]\n• [Point 2]\n• [Point 3]\n\n${hashtags[platform]}`;
+            } else if (tone === 'funny') {
+                post = `${randomEmoji} ${topic}\n\nYou know what they say... [add funny take here]\n\n${hashtags[platform]}`;
+            } else if (tone === 'inspirational') {
+                post = `${randomEmoji} ${topic}\n\nRemember: [Inspiring message here]\n\nTag someone who needs to see this!\n\n${hashtags[platform]}`;
+            } else if (tone === 'promotional') {
+                post = `🎉 ${topic}\n\n✨ [Benefit 1]\n✨ [Benefit 2]\n✨ [Benefit 3]\n\nDon't miss out! [Call to action]\n\n${hashtags[platform]}`;
+            } else {
+                post = `${topic}\n\n[Share your thoughts here]\n\nWhat do you think? Let me know in the comments!\n\n${hashtags[platform]}`;
+            }
+
+            displayOutput(post, `${platform.charAt(0).toUpperCase() + platform.slice(1)} Post`);
+        }
+
+        function generateBlog() {
+            const title = document.getElementById('blog-title').value;
+            const audience = document.getElementById('blog-audience').value;
+            const points = document.getElementById('blog-points').value.split('\n').filter(p => p.trim());
+
+            if (!title) {
+                alert('Please enter a blog title');
+                return;
+            }
+
+            let outline = `BLOG POST OUTLINE\n\n`;
+            outline += `Title: ${title}\n`;
+            outline += `Target Audience: ${audience || '[Define your audience]'}\n\n`;
+            outline += `Introduction\n`;
+            outline += `• Hook: Start with an interesting fact or question\n`;
+            outline += `• Context: Why this topic matters\n`;
+            outline += `• Preview: What readers will learn\n\n`;
+
+            if (points.length > 0) {
+                points.forEach((point, index) => {
+                    outline += `Section ${index + 1}: ${point}\n`;
+                    outline += `• Main content\n`;
+                    outline += `• Examples or data\n`;
+                    outline += `• Actionable tips\n\n`;
+                });
+            } else {
+                outline += `Main Content Sections\n`;
+                outline += `• Section 1: [Topic]\n`;
+                outline += `• Section 2: [Topic]\n`;
+                outline += `• Section 3: [Topic]\n\n`;
+            }
+
+            outline += `Conclusion\n`;
+            outline += `• Summary of key points\n`;
+            outline += `• Call to action\n`;
+            outline += `• Engagement question`;
+
+            displayOutput(outline, 'Blog Post Outline');
+        }
+
+        function generateProduct() {
+            const name = document.getElementById('product-name').value;
+            const category = document.getElementById('product-category').value;
+            const features = document.getElementById('product-features').value.split('\n').filter(f => f.trim());
+            const customer = document.getElementById('product-customer').value;
+
+            if (!name) {
+                alert('Please enter a product name');
+                return;
+            }
+
+            let description = `${name}\n\n`;
+            description += `Introducing ${name} - the ultimate ${category} designed for ${customer || 'discerning customers'}.\n\n`;
+
+            if (features.length > 0) {
+                description += `Key Features:\n`;
+                features.forEach(feature => {
+                    description += `✓ ${feature}\n`;
+                });
+                description += `\n`;
+            }
+
+            description += `Why Choose ${name}?\n`;
+            description += `Perfect for ${customer || 'anyone looking for quality'}, this ${category} combines functionality with style. `;
+            description += `Whether you're [use case 1] or [use case 2], ${name} delivers exceptional performance every time.\n\n`;
+            description += `Order now and experience the difference!`;
+
+            displayOutput(description, 'Product Description');
+        }
+
+        function generateStory() {
+            const genre = document.getElementById('story-genre').value;
+            const character = document.getElementById('story-character').value;
+            const setting = document.getElementById('story-setting').value;
+            const plot = document.getElementById('story-plot').value;
+
+            if (!character || !setting) {
+                alert('Please fill in character and setting');
+                return;
+            }
+
+            const openings = {
+                adventure: `The journey began when ${character} discovered something that would change everything.`,
+                mystery: `${character} never expected to stumble upon a mystery that would consume their every waking moment.`,
+                scifi: `In ${setting}, ${character} faced a future unlike anything humanity had ever known.`,
+                fantasy: `In the mystical realm of ${setting}, ${character} possessed a power that few understood.`,
+                romance: `When ${character} arrived in ${setting}, they never imagined finding love.`,
+                horror: `The first sign that something was wrong came when ${character} noticed the silence in ${setting}.`
+            };
+
+            let outline = `STORY OUTLINE: ${genre.toUpperCase()}\n\n`;
+            outline += `Setting: ${setting}\n`;
+            outline += `Main Character: ${character}\n\n`;
+            outline += `Beginning\n`;
+            outline += `${openings[genre]}\n\n`;
+            outline += `Middle\n`;
+            outline += plot || `• Rising action\n• Conflict develops\n• Character faces challenges`;
+            outline += `\n\nClimax\n`;
+            outline += `• Major turning point\n`;
+            outline += `• Highest tension\n\n`;
+            outline += `Resolution\n`;
+            outline += `• Conflict resolves\n`;
+            outline += `• Character transformation\n`;
+            outline += `• Final scene`;
+
+            displayOutput(outline, 'Story Outline');
+        }
+
+        function copyToClipboard() {
+            const text = document.querySelector('.generated-text').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+
+        function regenerateContent() {
+            // Call the appropriate generate function based on current template
+            const generators = {
+                email: generateEmail,
+                essay: generateEssay,
+                social: generateSocial,
+                blog: generateBlog,
+                product: generateProduct,
+                story: generateStory
+            };
+
+            if (currentTemplate && generators[currentTemplate]) {
+                generators[currentTemplate]();
+            }
+        }
+    </script>
+</body>
+</html>

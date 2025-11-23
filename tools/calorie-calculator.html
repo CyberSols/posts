@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #11998e;
+        }
+
+        .gender-select {
+            display: flex;
+            gap: 15px;
+        }
+
+        .gender-option {
+            flex: 1;
+            padding: 15px;
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .gender-option:hover {
+            border-color: #11998e;
+        }
+
+        .gender-option.selected {
+            background: #11998e;
+            color: white;
+            border-color: #11998e;
+        }
+
+        .unit-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .unit-btn {
+            flex: 1;
+            padding: 10px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .unit-btn.active {
+            background: #11998e;
+            color: white;
+        }
+
+        button.calculate {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        button.calculate:hover {
+            transform: translateY(-2px);
+        }
+
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            padding: 25px;
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .result-card h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .result-card .value {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .goal-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #11998e;
+        }
+
+        .goal-card h3 {
+            color: #11998e;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .goal-card .calories {
+            color: #333;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .goal-card .description {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .info-box {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .info-box p {
+            color: #2e7d32;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .macro-breakdown {
+            background: #fff3e0;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .macro-breakdown h3 {
+            color: #e65100;
+            margin-bottom: 15px;
+        }
+
+        .macro-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+        }
+
+        .macro-item .name {
+            color: #666;
+        }
+
+        .macro-item .amount {
+            color: #333;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Calorie Calculator</h1>
+        <p class="subtitle">Calculate your daily calorie needs based on BMR and activity level</p>
+
+        <div class="unit-toggle">
+            <button class="unit-btn active" onclick="setUnit('metric')">Metric (kg, cm)</button>
+            <button class="unit-btn" onclick="setUnit('imperial')">Imperial (lbs, in)</button>
+        </div>
+
+        <div class="input-group">
+            <label>Gender:</label>
+            <div class="gender-select">
+                <div class="gender-option selected" onclick="selectGender('male')">
+                    👨 Male
+                </div>
+                <div class="gender-option" onclick="selectGender('female')">
+                    👩 Female
+                </div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" placeholder="Enter your age" min="15" max="120">
+        </div>
+
+        <div class="input-group">
+            <label for="weight"><span id="weight-label">Weight (kg):</span></label>
+            <input type="number" id="weight" placeholder="Enter your weight" min="20" max="500" step="0.1">
+        </div>
+
+        <div class="input-group">
+            <label for="height"><span id="height-label">Height (cm):</span></label>
+            <input type="number" id="height" placeholder="Enter your height" min="100" max="300" step="0.1">
+        </div>
+
+        <div class="input-group">
+            <label for="activity">Activity Level:</label>
+            <select id="activity">
+                <option value="1.2">Sedentary (little or no exercise)</option>
+                <option value="1.375">Lightly active (exercise 1-3 days/week)</option>
+                <option value="1.55" selected>Moderately active (exercise 3-5 days/week)</option>
+                <option value="1.725">Very active (exercise 6-7 days/week)</option>
+                <option value="1.9">Extremely active (physical job or training twice/day)</option>
+            </select>
+        </div>
+
+        <button class="calculate" onclick="calculateCalories()">Calculate Calories</button>
+
+        <div id="results" class="results"></div>
+
+        <div class="info-box">
+            <p><strong>💡 Note:</strong> BMR (Basal Metabolic Rate) is the number of calories your body needs at rest. TDEE (Total Daily Energy Expenditure) includes your activity level. Results are estimates based on the Mifflin-St Jeor equation.</p>
+        </div>
+    </div>
+
+    <script>
+        let selectedGender = 'male';
+        let currentUnit = 'metric';
+
+        function setUnit(unit) {
+            currentUnit = unit;
+            const buttons = document.querySelectorAll('.unit-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (unit === 'imperial') {
+                document.getElementById('weight-label').textContent = 'Weight (lbs):';
+                document.getElementById('height-label').textContent = 'Height (inches):';
+            } else {
+                document.getElementById('weight-label').textContent = 'Weight (kg):';
+                document.getElementById('height-label').textContent = 'Height (cm):';
+            }
+        }
+
+        function selectGender(gender) {
+            selectedGender = gender;
+            const options = document.querySelectorAll('.gender-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        function calculateCalories() {
+            const age = parseFloat(document.getElementById('age').value);
+            let weight = parseFloat(document.getElementById('weight').value);
+            let height = parseFloat(document.getElementById('height').value);
+            const activityLevel = parseFloat(document.getElementById('activity').value);
+
+            if (!age || !weight || !height) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // Convert imperial to metric if needed
+            if (currentUnit === 'imperial') {
+                weight = weight * 0.453592; // lbs to kg
+                height = height * 2.54; // inches to cm
+            }
+
+            // Mifflin-St Jeor Equation
+            let bmr;
+            if (selectedGender === 'male') {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            }
+
+            const tdee = bmr * activityLevel;
+
+            // Calculate goals
+            const maintain = Math.round(tdee);
+            const mildLoss = Math.round(tdee - 250);
+            const weightLoss = Math.round(tdee - 500);
+            const extremeLoss = Math.round(tdee - 1000);
+            const mildGain = Math.round(tdee + 250);
+            const weightGain = Math.round(tdee + 500);
+
+            // Macronutrient breakdown (for maintenance)
+            const protein = Math.round((maintain * 0.30) / 4); // 30% protein, 4 cal/g
+            const carbs = Math.round((maintain * 0.40) / 4); // 40% carbs, 4 cal/g
+            const fats = Math.round((maintain * 0.30) / 9); // 30% fats, 9 cal/g
+
+            let html = `
+                <div class="result-card">
+                    <h2>Your Basal Metabolic Rate (BMR)</h2>
+                    <div class="value">${Math.round(bmr)} cal/day</div>
+                </div>
+
+                <div class="result-card">
+                    <h2>Your Total Daily Energy Expenditure (TDEE)</h2>
+                    <div class="value">${maintain} cal/day</div>
+                </div>
+
+                <h3 style="margin-top: 25px; margin-bottom: 15px; color: #333;">Your Calorie Goals</h3>
+                <div class="goals-grid">
+                    <div class="goal-card">
+                        <h3>🔽 Extreme Loss</h3>
+                        <div class="calories">${extremeLoss}</div>
+                        <div class="description">-1 kg/week</div>
+                    </div>
+                    <div class="goal-card">
+                        <h3>📉 Weight Loss</h3>
+                        <div class="calories">${weightLoss}</div>
+                        <div class="description">-0.5 kg/week</div>
+                    </div>
+                    <div class="goal-card">
+                        <h3>📊 Mild Loss</h3>
+                        <div class="calories">${mildLoss}</div>
+                        <div class="description">-0.25 kg/week</div>
+                    </div>
+                    <div class="goal-card">
+                        <h3>⚖️ Maintain</h3>
+                        <div class="calories">${maintain}</div>
+                        <div class="description">No change</div>
+                    </div>
+                    <div class="goal-card">
+                        <h3>📈 Mild Gain</h3>
+                        <div class="calories">${mildGain}</div>
+                        <div class="description">+0.25 kg/week</div>
+                    </div>
+                    <div class="goal-card">
+                        <h3>🔼 Weight Gain</h3>
+                        <div class="calories">${weightGain}</div>
+                        <div class="description">+0.5 kg/week</div>
+                    </div>
+                </div>
+
+                <div class="macro-breakdown">
+                    <h3>📊 Macronutrient Breakdown (for maintenance)</h3>
+                    <div class="macro-item">
+                        <span class="name">Protein (30%)</span>
+                        <span class="amount">${protein}g/day</span>
+                    </div>
+                    <div class="macro-item">
+                        <span class="name">Carbohydrates (40%)</span>
+                        <span class="amount">${carbs}g/day</span>
+                    </div>
+                    <div class="macro-item">
+                        <span class="name">Fats (30%)</span>
+                        <span class="amount">${fats}g/day</span>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('results').innerHTML = html;
+            document.getElementById('results').classList.add('show');
+        }
+    </script>
+</body>
+</html>

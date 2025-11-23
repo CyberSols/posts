@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human vs AI Text Checker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 250px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .char-count {
+            text-align: right;
+            color: #666;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        button.analyze {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        button.analyze:hover {
+            transform: translateY(-2px);
+        }
+
+        button.analyze:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .detection-meter {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .meter-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .meter-bar {
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(to right, #4caf50, #ffc107, #f44336);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meter-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: left 0.5s ease;
+        }
+
+        .verdict {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .verdict.human {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .verdict.mixed {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .verdict.ai {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .analysis-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .analysis-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .analysis-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4facfe;
+            margin-bottom: 5px;
+        }
+
+        .analysis-card .description {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .indicators-list {
+            margin-top: 20px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .indicators-list h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .indicator-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+        }
+
+        .indicator-icon {
+            font-size: 20px;
+        }
+
+        .disclaimer {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .disclaimer p {
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI Text Detector</h1>
+        <p class="subtitle">Analyze text to detect if it's written by human or AI</p>
+
+        <textarea id="text-input" placeholder="Paste your text here to analyze... (minimum 100 characters recommended for accurate results)"></textarea>
+        <div class="char-count">
+            <span id="char-count">0</span> characters
+        </div>
+
+        <button class="analyze" onclick="analyzeText()" id="analyze-btn">Analyze Text</button>
+
+        <div id="results" class="results"></div>
+
+        <div class="disclaimer">
+            <p><strong>⚠️ Disclaimer:</strong> This tool uses heuristic analysis to detect AI-generated content. Results are estimates based on linguistic patterns and should not be considered 100% accurate. No AI detection tool is perfect, and results can vary based on writing style and context.</p>
+        </div>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('text-input');
+        const charCount = document.getElementById('char-count');
+
+        textInput.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+
+        function analyzeText() {
+            const text = textInput.value.trim();
+
+            if (text.length < 50) {
+                alert('Please enter at least 50 characters for analysis');
+                return;
+            }
+
+            const analysis = performAnalysis(text);
+            displayResults(analysis);
+        }
+
+        function performAnalysis(text) {
+            // Calculate various metrics
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            const words = text.split(/\s+/).filter(w => w.length > 0);
+            const avgSentenceLength = words.length / sentences.length;
+
+            // Calculate vocabulary diversity (unique words / total words)
+            const uniqueWords = new Set(words.map(w => w.toLowerCase()));
+            const vocabularyDiversity = uniqueWords.size / words.length;
+
+            // Check for AI-common phrases
+            const aiPhrases = [
+                'it is important to note',
+                'it\'s worth noting',
+                'delve into',
+                'in conclusion',
+                'in summary',
+                'furthermore',
+                'moreover',
+                'additionally',
+                'it is essential',
+                'comprehensive',
+                'robust',
+                'leverage',
+                'utilize',
+                'facilitate',
+                'paradigm'
+            ];
+
+            let aiPhraseCount = 0;
+            const textLower = text.toLowerCase();
+            aiPhrases.forEach(phrase => {
+                if (textLower.includes(phrase)) aiPhraseCount++;
+            });
+
+            // Calculate sentence length variance
+            const sentenceLengths = sentences.map(s => s.split(/\s+/).length);
+            const avgLength = sentenceLengths.reduce((a, b) => a + b, 0) / sentenceLengths.length;
+            const variance = sentenceLengths.reduce((sum, len) => sum + Math.pow(len - avgLength, 2), 0) / sentenceLengths.length;
+            const stdDev = Math.sqrt(variance);
+
+            // Calculate perplexity estimate (simplified)
+            const sentenceLengthConsistency = stdDev / avgLength;
+
+            // Check for transition words (AI tends to use more)
+            const transitionWords = ['however', 'therefore', 'thus', 'hence', 'consequently', 'nevertheless', 'furthermore', 'moreover', 'additionally'];
+            let transitionCount = 0;
+            transitionWords.forEach(word => {
+                const regex = new RegExp('\\b' + word + '\\b', 'gi');
+                const matches = text.match(regex);
+                if (matches) transitionCount += matches.length;
+            });
+            const transitionDensity = transitionCount / words.length;
+
+            // Scoring algorithm (0 = human, 100 = AI)
+            let aiScore = 0;
+
+            // Factor 1: Sentence length (15-25 words is typical for AI)
+            if (avgSentenceLength >= 15 && avgSentenceLength <= 25) {
+                aiScore += 20;
+            } else if (avgSentenceLength < 10 || avgSentenceLength > 30) {
+                aiScore -= 10;
+            }
+
+            // Factor 2: Vocabulary diversity (AI tends to be more consistent, 0.4-0.6)
+            if (vocabularyDiversity >= 0.4 && vocabularyDiversity <= 0.6) {
+                aiScore += 15;
+            } else if (vocabularyDiversity > 0.7) {
+                aiScore -= 10;
+            }
+
+            // Factor 3: AI phrases
+            aiScore += aiPhraseCount * 10;
+
+            // Factor 4: Sentence length consistency (AI is more consistent)
+            if (sentenceLengthConsistency < 0.4) {
+                aiScore += 20;
+            } else if (sentenceLengthConsistency > 0.7) {
+                aiScore -= 15;
+            }
+
+            // Factor 5: Transition word density
+            if (transitionDensity > 0.03) {
+                aiScore += 15;
+            }
+
+            // Normalize score to 0-100
+            aiScore = Math.max(0, Math.min(100, aiScore + 30));
+
+            return {
+                aiScore: aiScore,
+                humanScore: 100 - aiScore,
+                sentenceCount: sentences.length,
+                wordCount: words.length,
+                avgSentenceLength: avgSentenceLength.toFixed(1),
+                vocabularyDiversity: (vocabularyDiversity * 100).toFixed(1),
+                sentenceLengthConsistency: sentenceLengthConsistency.toFixed(2),
+                aiPhraseCount: aiPhraseCount,
+                transitionDensity: (transitionDensity * 100).toFixed(2)
+            };
+        }
+
+        function displayResults(analysis) {
+            const aiScore = analysis.aiScore;
+            let verdict, verdictClass, verdictIcon;
+
+            if (aiScore < 35) {
+                verdict = 'Likely Human Written';
+                verdictClass = 'human';
+                verdictIcon = '✅';
+            } else if (aiScore < 65) {
+                verdict = 'Mixed / Uncertain';
+                verdictClass = 'mixed';
+                verdictIcon = '⚠️';
+            } else {
+                verdict = 'Likely AI Generated';
+                verdictClass = 'ai';
+                verdictIcon = '🤖';
+            }
+
+            let html = `
+                <div class="detection-meter">
+                    <div class="meter-label">
+                        <span>👤 Human</span>
+                        <span>🤖 AI</span>
+                    </div>
+                    <div class="meter-bar">
+                        <div class="meter-indicator" style="left: ${aiScore}%"></div>
+                    </div>
+                    <div style="text-align: center; margin-top: 15px; font-size: 18px; color: #666;">
+                        <strong>AI Probability: ${aiScore.toFixed(1)}%</strong>
+                    </div>
+                </div>
+
+                <div class="verdict ${verdictClass}">
+                    ${verdictIcon} ${verdict}
+                </div>
+
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <h3>Word Count</h3>
+                        <div class="value">${analysis.wordCount}</div>
+                        <div class="description">Total words analyzed</div>
+                    </div>
+                    <div class="analysis-card">
+                        <h3>Sentences</h3>
+                        <div class="value">${analysis.sentenceCount}</div>
+                        <div class="description">Total sentences</div>
+                    </div>
+                    <div class="analysis-card">
+                        <h3>Avg. Sentence Length</h3>
+                        <div class="value">${analysis.avgSentenceLength}</div>
+                        <div class="description">Words per sentence</div>
+                    </div>
+                    <div class="analysis-card">
+                        <h3>Vocabulary Diversity</h3>
+                        <div class="value">${analysis.vocabularyDiversity}%</div>
+                        <div class="description">Unique word ratio</div>
+                    </div>
+                </div>
+
+                <div class="indicators-list">
+                    <h3>Detection Indicators</h3>
+                    ${generateIndicators(analysis, aiScore)}
+                </div>
+            `;
+
+            document.getElementById('results').innerHTML = html;
+            document.getElementById('results').classList.add('show');
+        }
+
+        function generateIndicators(analysis, aiScore) {
+            const indicators = [];
+
+            // Sentence length indicator
+            const avgLen = parseFloat(analysis.avgSentenceLength);
+            if (avgLen >= 15 && avgLen <= 25) {
+                indicators.push({
+                    icon: '🤖',
+                    text: 'Average sentence length matches AI patterns (15-25 words)',
+                    type: 'ai'
+                });
+            } else if (avgLen < 10 || avgLen > 30) {
+                indicators.push({
+                    icon: '👤',
+                    text: 'Sentence length variation suggests human writing',
+                    type: 'human'
+                });
+            }
+
+            // Vocabulary diversity
+            const vocabDiv = parseFloat(analysis.vocabularyDiversity);
+            if (vocabDiv >= 40 && vocabDiv <= 60) {
+                indicators.push({
+                    icon: '🤖',
+                    text: 'Vocabulary diversity in typical AI range',
+                    type: 'ai'
+                });
+            } else if (vocabDiv > 70) {
+                indicators.push({
+                    icon: '👤',
+                    text: 'High vocabulary diversity suggests human creativity',
+                    type: 'human'
+                });
+            }
+
+            // AI phrases
+            if (analysis.aiPhraseCount > 2) {
+                indicators.push({
+                    icon: '🤖',
+                    text: `Contains ${analysis.aiPhraseCount} common AI phrases`,
+                    type: 'ai'
+                });
+            }
+
+            // Consistency
+            const consistency = parseFloat(analysis.sentenceLengthConsistency);
+            if (consistency < 0.4) {
+                indicators.push({
+                    icon: '🤖',
+                    text: 'Very consistent sentence structure (typical of AI)',
+                    type: 'ai'
+                });
+            } else if (consistency > 0.7) {
+                indicators.push({
+                    icon: '👤',
+                    text: 'Variable sentence structure suggests human writing',
+                    type: 'human'
+                });
+            }
+
+            let html = '';
+            indicators.forEach(ind => {
+                html += `
+                    <div class="indicator-item">
+                        <span class="indicator-icon">${ind.icon}</span>
+                        <span>${ind.text}</span>
+                    </div>
+                `;
+            });
+
+            return html || '<div class="indicator-item"><span>No strong indicators detected</span></div>';
+        }
+    </script>
+</body>
+</html>

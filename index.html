@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free online file converter - Convert PDF, images, videos, documents, and audio files. Includes tools for PDF merge/split, image compression, background removal, and SEO analysis.">
+    <meta name="keywords" content="file converter, PDF converter, image converter, video converter, online tools, free converter">
+    <title>FileConverter Pro - Free Online File Conversion & Utility Tools</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo">
+                    <h1>FileConverter<span class="pro">Pro</span></h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#converters">Converters</a></li>
+                    <li><a href="#utilities">Utilities</a></li>
+                    <li><a href="#seo-tools">SEO Tools</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h2>Free Online File Conversion & Utility Tools</h2>
+                <p>Convert, compress, and optimize your files instantly in your browser. All processing is done locally - your files never leave your device.</p>
+            </div>
+        </section>
+
+        <!-- Converters Section -->
+        <section id="converters" class="section">
+            <div class="container">
+                <h2 class="section-title">File Converters</h2>
+
+                <!-- PDF Converters -->
+                <div class="tool-category">
+                    <h3 class="category-title">PDF Converters</h3>
+                    <div class="tools-grid">
+                        <div class="tool-card" onclick="openTool('pdf-to-word')">
+                            <div class="tool-icon">📄</div>
+                            <h4>PDF to Word</h4>
+                            <p>Convert PDF files to editable Word documents</p>
+                        </div>
+                        <div class="tool-card" onclick="openTool('pdf-to-excel')">
+                            <div class="tool-icon">📊</div>
+                            <h4>PDF to Excel</h4>
+                            <p>Extract tables from PDF to Excel spreadsheets</p>
+                        </div>
+                        <div class="tool-card" onclick="openTool('pdf-to-image')">
+                            <div class="tool-icon">🖼️</div>
+                            <h4>PDF to Image</h4>
+                            <p>Convert PDF pages to JPG or PNG images</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Converters -->
+                <div class="tool-category">
+                    <h3 class="category-title">Image Converters</h3>
+                    <div class="tools-grid">
+                        <div class="tool-card" onclick="openTool('image-converter')">
+                            <div class="tool-icon">🎨</div>
+                            <h4>Image Format Converter</h4>
+                            <p>Convert between JPG, PNG, WebP, and HEIC formats</p>
+                        </div>
+                        <div class="tool-card" onclick="openTool('jpg-to-png')">
+                            <div class="tool-icon">🖼️</div>
+                            <h4>JPG to PNG</h4>
+                            <p>Convert JPG images to PNG format</p>
+                        </div>
+                        <div class="tool-card" onclick="openTool('png-to-jpg')">
+                            <div class="tool-icon">🖼️</div>
+                            <h4>PNG to JPG</h4>
+                            <p>Convert PNG images to JPG format</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Converters -->
+                <div class="tool-category">
+                    <h3 class="category-title">Video Converters</h3>
+                    <div class="tools-grid">
+                        <div class="tool-card" onclick="openTool('video-to-mp4')">
+                            <div class="tool-icon">🎬</div>
+                            <h4>Video to MP4</h4>
+                            <p>Convert any video format to MP4</p>
+                        </div>
+                        <div class="tool-card" onclick="openTool('video-to-gif')">
+                            <div class="tool-icon">🎞️</div>
+                            <h4>Video to GIF</h4>
+                            <p>Create animated GIFs from videos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Converters -->
+                <div class="tool-category">
+                    <h3 class="category-title">Document Converters</h3>
+                    <div class="tools-grid">
+                        <div class="tool-card" onclick="openTool('docx-to-pdf')">
+                            <div class="tool-icon">📝</div>
+                            <h4>DOCX to PDF</h4>
+                            <p>Convert Word documents to PDF format</p>
+                        </div>
+                        <div class="tool-card" onclick="openTool('txt-to-pdf')">
+                            <div class="tool-icon">📄</div>
+                            <h4>TXT to PDF</h4>
+                            <p>Convert text files to PDF documents</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audio Converters -->
+                <div class="tool-category">
+                    <h3 class="category-title">Audio Converters</h3>
+                    <div class="tools-grid">
+                        <div class="tool-card" onclick="openTool('audio-converter')">
+                            <div class="tool-icon">🎵</div>
+                            <h4>Audio Format Converter</h4>
+                            <p>Convert between MP3, WAV, OGG, and M4A formats</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Utilities Section -->
+        <section id="utilities" class="section bg-light">
+            <div class="container">
+                <h2 class="section-title">Utility Tools</h2>
+
+                <!-- PDF Tools -->
+                <div class="tool-category">
+                    <h3 class="category-title">PDF Utilities</h3>
+                    <div class="tools-grid">
+                        <div class="tool-card" onclick="openTool('pdf-merge')">
+                            <div class="tool-icon">📑</div>
+                            <h4>Merge PDF</h4>
+                            <p>Combine multiple PDF files into one</p>
+                        </div>
+                        <div class="tool-card" onclick="openTool('pdf-split')">
+                            <div class="tool-icon">✂️</div>
+                            <h4>Split PDF</h4>
+                            <p>Split a PDF into multiple files</p>
+                        </div>
+                        <div class="tool-card" onclick="openTool('pdf-compress')">
+                            <div class="tool-icon">🗜️</div>
+                            <h4>Compress PDF</h4>
+                            <p>Reduce PDF file size without losing quality</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Tools -->
+                <div class="tool-category">
+                    <h3 class="category-title">Image Utilities</h3>
+                    <div class="tools-grid">
+                        <div class="tool-card" onclick="openTool('image-compress')">
+                            <div class="tool-icon">📦</div>
+                            <h4>Image Compressor</h4>
+                            <p>Compress images to reduce file size</p>
+                        </div>
+                        <div class="tool-card" onclick="openTool('image-resize')">
+                            <div class="tool-icon">📏</div>
+                            <h4>Image Resizer</h4>
+                            <p>Resize images to specific dimensions</p>
+                        </div>
+                        <div class="tool-card" onclick="openTool('background-remover')">
+                            <div class="tool-icon">🎭</div>
+                            <h4>Background Remover</h4>
+                            <p>Remove backgrounds from images automatically</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEO Tools Section -->
+        <section id="seo-tools" class="section">
+            <div class="container">
+                <h2 class="section-title">SEO Tools</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" onclick="openTool('meta-checker')">
+                        <div class="tool-icon">🏷️</div>
+                        <h4>Meta Tag Checker</h4>
+                        <p>Analyze and validate meta tags on any webpage</p>
+                    </div>
+                    <div class="tool-card" onclick="openTool('broken-link-checker')">
+                        <div class="tool-icon">🔗</div>
+                        <h4>Broken Link Checker</h4>
+                        <p>Find and report broken links on your website</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Tool Modal -->
+    <div id="toolModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="toolContent"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 FileConverter Pro. All files are processed locally in your browser for maximum privacy and security.</p>
+            <p>No files are uploaded to any server. Your data stays on your device.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

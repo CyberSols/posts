@@ -29,6 +29,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -36,6 +37,12 @@ body {
     color: var(--text-dark);
     line-height: 1.6;
     overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
 }
 
 .container {
@@ -844,6 +851,14 @@ body {
    RESPONSIVE DESIGN
    ==================================== */
 @media (max-width: 968px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .nav-container {
+        padding: 1rem 15px;
+    }
+
     .nav-menu {
         position: fixed;
         top: 0;
@@ -867,30 +882,80 @@ body {
         display: flex;
     }
 
+    .hero {
+        padding-top: 70px;
+        min-height: auto;
+        padding-bottom: 4rem;
+    }
+
     .hero-container {
         grid-template-columns: 1fr;
         gap: 2rem;
         text-align: center;
+        padding: 2rem 15px;
     }
 
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
+        line-height: 1.3;
     }
 
     .hero-subtitle {
         font-size: 1rem;
+        margin-bottom: 1.5rem;
     }
 
     .hero-buttons {
         justify-content: center;
+        gap: 0.8rem;
     }
 
     .hero-features {
         justify-content: center;
+        gap: 1rem;
+    }
+
+    .feature-badge {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
     }
 
     .hero-image {
-        height: 300px;
+        height: 250px;
+        display: none;
+    }
+
+    .floating-card {
+        display: none;
+    }
+
+    .services {
+        padding: 4rem 0;
+    }
+
+    .section-header {
+        margin-bottom: 2.5rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        padding: 0 1rem;
+    }
+
+    .services-grid {
+        gap: 1.5rem;
+    }
+
+    .service-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .about {
+        padding: 4rem 0;
     }
 
     .about-grid {
@@ -898,57 +963,232 @@ body {
         gap: 2rem;
     }
 
-    .contact-grid {
-        grid-template-columns: 1fr;
+    .about-feature {
+        padding: 1.2rem;
+    }
+
+    .stats-card {
+        padding: 2rem;
+        gap: 1.5rem;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+    }
+
+    .tagline {
+        padding: 3rem 1rem;
     }
 
     .tagline-text {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
+        line-height: 1.6;
     }
 
     .tagline-brand {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
+    }
+
+    .contact {
+        padding: 4rem 0;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .contact-info {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .info-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .info-icon {
+        font-size: 2rem;
+    }
+
+    .footer {
+        padding: 2.5rem 0 1.5rem;
+    }
+
+    .footer-content {
+        gap: 2rem;
+    }
+
+    .back-to-top {
+        width: 45px;
+        height: 45px;
+        bottom: 20px;
+        right: 20px;
+        font-size: 1.3rem;
     }
 }
 
 @media (max-width: 640px) {
+    .container {
+        padding: 0 12px;
+    }
+
+    .logo {
+        font-size: 1.3rem;
+    }
+
+    .logo-icon {
+        font-size: 1.5rem;
+    }
+
     .hero-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
+    }
+
+    .hero-title br {
+        display: none;
+    }
+
+    .hero-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+        padding: 0.9rem 1.5rem;
     }
 
     .section-title {
-        font-size: 2rem;
+        font-size: 1.75rem;
+    }
+
+    .section-subtitle {
+        font-size: 0.95rem;
     }
 
     .services-grid {
         grid-template-columns: 1fr;
     }
 
-    .contact-form-wrapper {
-        padding: 2rem;
+    .service-card {
+        padding: 1.8rem 1.2rem;
     }
 
-    .hero-buttons {
+    .service-icon {
+        font-size: 2.5rem;
+    }
+
+    .service-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .about-feature {
         flex-direction: column;
-    }
-
-    .btn {
-        width: 100%;
         text-align: center;
+        align-items: center;
     }
 
-    .floating-card {
+    .feature-icon-circle {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        font-size: 1.3rem;
+    }
+
+    .about-feature h4 {
+        font-size: 1.1rem;
+    }
+
+    .stats-card {
+        padding: 1.5rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .stat p {
         font-size: 0.9rem;
-        padding: 0.8rem 1rem;
+    }
+
+    .tagline-text {
+        font-size: 1.3rem;
+    }
+
+    .tagline-brand {
+        font-size: 1.5rem;
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+
+    .contact-grid {
+        gap: 2rem;
+    }
+
+    .contact-info {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-form-wrapper {
+        padding: 1.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        padding: 0.9rem;
+        font-size: 0.95rem;
     }
 
     .footer-content {
         grid-template-columns: 1fr;
         text-align: center;
+        gap: 1.5rem;
     }
 
-    .contact-info {
-        grid-template-columns: 1fr;
+    .footer-section {
+        padding: 0 1rem;
+    }
+
+    .back-to-top {
+        width: 40px;
+        height: 40px;
+        bottom: 15px;
+        right: 15px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 375px) {
+    .hero-title {
+        font-size: 1.6rem;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+    }
+
+    .tagline-text {
+        font-size: 1.1rem;
+    }
+
+    .feature-badge {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .service-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .contact-form-wrapper {
+        padding: 1.2rem;
     }
 }
 

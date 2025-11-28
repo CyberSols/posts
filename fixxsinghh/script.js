@@ -240,18 +240,21 @@ const showNotification = (message, type = 'success') => {
 
 const floatingCards = document.querySelectorAll('.floating-card');
 
-window.addEventListener('mousemove', (e) => {
-    const mouseX = e.clientX / window.innerWidth;
-    const mouseY = e.clientY / window.innerHeight;
+// Only enable parallax on desktop devices
+if (window.innerWidth > 968) {
+    window.addEventListener('mousemove', (e) => {
+        const mouseX = e.clientX / window.innerWidth;
+        const mouseY = e.clientY / window.innerHeight;
 
-    floatingCards.forEach((card, index) => {
-        const speed = (index + 1) * 5;
-        const x = (mouseX - 0.5) * speed;
-        const y = (mouseY - 0.5) * speed;
+        floatingCards.forEach((card, index) => {
+            const speed = (index + 1) * 5;
+            const x = (mouseX - 0.5) * speed;
+            const y = (mouseY - 0.5) * speed;
 
-        card.style.transform = `translate(${x}px, ${y}px)`;
+            card.style.transform = `translate(${x}px, ${y}px)`;
+        });
     });
-});
+}
 
 // ====================================
 // PARALLAX SCROLL EFFECT
@@ -262,10 +265,17 @@ window.addEventListener('scroll', () => {
     const heroContent = document.querySelector('.hero-content');
     const heroImage = document.querySelector('.hero-image');
 
-    if (heroContent && window.innerWidth > 768) {
+    // Disable parallax on mobile for better performance
+    if (heroContent && window.innerWidth > 968) {
         heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
         if (heroImage) {
             heroImage.style.transform = `translateY(${scrolled * 0.15}px)`;
+        }
+    } else if (heroContent) {
+        // Reset transform on mobile
+        heroContent.style.transform = 'translateY(0)';
+        if (heroImage) {
+            heroImage.style.transform = 'translateY(0)';
         }
     }
 });

@@ -265,7 +265,7 @@
                     </div>
                 </div>
                 <div class="contact-form-wrapper">
-                    <form class="contact-form" id="contactForm">
+                    <form class="contact-form" id="contactForm" action="https://formspree.io/f/xanyrovw" method="POST">
                         <div class="form-group">
                             <input type="text" id="name" name="name" required>
                             <label for="name">Your Name</label>
@@ -294,6 +294,8 @@
                             <textarea id="message" name="message" rows="4" required></textarea>
                             <label for="message">Your Message</label>
                         </div>
+                        <input type="hidden" name="_subject" value="New FixxSinghh Service Request">
+                        <input type="hidden" name="_replyto" id="_replyto">
                         <button type="submit" class="btn btn-primary btn-full">Send Message</button>
                     </form>
                 </div>

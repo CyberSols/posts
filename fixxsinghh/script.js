@@ -166,26 +166,49 @@ backToTopButton.addEventListener('click', () => {
 
 const contactForm = document.getElementById('contactForm');
 
-contactForm.addEventListener('submit', (e) => {
+contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // Set reply-to email to user's email
+    document.getElementById('_replyto').value = document.getElementById('email').value;
+
     // Get form data
-    const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        service: document.getElementById('service').value,
-        message: document.getElementById('message').value
-    };
+    const formData = new FormData(contactForm);
 
-    // Show success message
-    showNotification('Thank you! We\'ll get back to you soon.', 'success');
+    // Disable submit button to prevent double submission
+    const submitButton = contactForm.querySelector('button[type="submit"]');
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = 'Sending...';
+    submitButton.disabled = true;
 
-    // Reset form
-    contactForm.reset();
+    try {
+        // Send form data to Formspree
+        const response = await fetch(contactForm.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
 
-    // In a real application, you would send this data to a server
-    console.log('Form submitted:', formData);
+        if (response.ok) {
+            // Show success message
+            showNotification('Thank you! We\'ll get back to you soon.', 'success');
+            // Reset form
+            contactForm.reset();
+        } else {
+            // Show error message
+            showNotification('Oops! There was a problem. Please try again.', 'error');
+        }
+    } catch (error) {
+        // Show error message
+        showNotification('Oops! There was a problem. Please try again.', 'error');
+        console.error('Form submission error:', error);
+    } finally {
+        // Re-enable submit button
+        submitButton.textContent = originalButtonText;
+        submitButton.disabled = false;
+    }
 });
 
 // ====================================
